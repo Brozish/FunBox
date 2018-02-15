@@ -4,7 +4,7 @@ import history from '../history';
 import { ConnectedRouter } from 'react-router-redux';
 import { Container } from 'reactstrap';
 
-import NotFound from './route/NotFound';
+import NotFound from './router/NotFound';
 import Home from 'Components/Home';
 
 const App = (props) => {
