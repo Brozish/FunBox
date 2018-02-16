@@ -6,7 +6,7 @@ export function loadRoute() {
   };
 }
 
-export function addWaypoint(name) {
+export function addWaypoint(name, coordinates) {
   return dispatch => {
     if (!name) return;
 
@@ -15,7 +15,7 @@ export function addWaypoint(name) {
     dispatch({
       type: ADD_WAYPOINT,
       payload: {
-        id, name
+        id, name, coordinates
       }
     });
   };

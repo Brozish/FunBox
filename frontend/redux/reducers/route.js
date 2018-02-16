@@ -3,7 +3,8 @@ import { OrderedMap, Record } from 'immutable';
 
 const WaypointRecord = Record({
   id: null,
-  name: null
+  name: null,
+  coordinates: null
 });
 
 const defaultStateRecord = Record({
@@ -20,10 +21,10 @@ export default (routeState = defaultState, action) => {
       return routeState;
       break;
     case ADD_WAYPOINT:
-      const { id, name } = payload;
+      const { id, name, coordinates } = payload;
 
       return routeState.setIn(['entities', id], new WaypointRecord({
-        id, name
+        id, name, coordinates
       }));
       break;
     case DELETE_WAYPOINT:
@@ -49,18 +50,18 @@ export default (routeState = defaultState, action) => {
       return routeState.setIn(['entities'], waypoints.reduce((previousState, item, index) => {
         if (sortedWaypoint && index === newIndex) {
           previousState = previousState.set(sortedWaypoint.id, new WaypointRecord({
-            id: sortedWaypoint.id, name: sortedWaypoint.name
+            id: sortedWaypoint.id, name: sortedWaypoint.name, coordinates: sortedWaypoint.coordinates
           }));
           sortedWaypoint = false;
         }
 
         previousState = previousState.set(item.id, new WaypointRecord({
-          id: item.id, name: item.name
+          id: item.id, name: item.name, coordinates: item.coordinates
         }));
 
         if (sortedWaypoint && index === (indexSize - 1)) {
           previousState = previousState.set(sortedWaypoint.id, new WaypointRecord({
-            id: sortedWaypoint.id, name: sortedWaypoint.name
+            id: sortedWaypoint.id, name: sortedWaypoint.name, coordinates: sortedWaypoint.coordinates
           }));
         }
 
