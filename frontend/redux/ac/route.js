@@ -1,4 +1,4 @@
-import { LOAD_ROUTE, ADD_WAYPOINT, DELETE_WAYPOINT } from 'constants';
+import { LOAD_ROUTE, ADD_WAYPOINT, DELETE_WAYPOINT, SORT_ROUTE } from 'constants';
 
 export function loadRoute() {
   return {
@@ -26,6 +26,15 @@ export function deleteWaypoint(id) {
     type: DELETE_WAYPOINT,
     payload: {
       id
+    }
+  };
+}
+
+export function sortRoute(id, diffSort, waypoints) {
+  return {
+    type: SORT_ROUTE,
+    payload: {
+      id, diffSort, waypoints
     }
   };
 }

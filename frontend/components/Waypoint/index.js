@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { InputGroup, InputGroupAddon, Input, Button } from 'reactstrap';
+import { Motion } from 'react-motion';
 
 import { deleteWaypoint } from 'Redux/ac/route';
 
@@ -12,20 +13,25 @@ class Waypoint extends Component {
   };
 
   render() {
-    const { waypoint, deleteWaypoint } = this.props;
+    const { waypoint, deleteWaypoint, onMouseDown, style, zIndex } = this.props;
 
     return (
-      <Fragment>
-        <InputGroup>
-          <Input disabled placeholder = {waypoint.name} />
-          <InputGroupAddon addonType = "append">
-            <Button onClick = {this.handleClick(waypoint.id, deleteWaypoint)} >
-              X
-            </Button>
-          </InputGroupAddon>
-        </InputGroup>
-        <br />
-      </Fragment>
+      <Motion style = {style} key = {waypoint.id}>
+        {
+          ({ scale, translateY }) =>
+            <Fragment>
+              <InputGroup onMouseDown = {onMouseDown} style = {transform(scale, translateY, zIndex)}>
+                <Input disabled placeholder = {waypoint.name} className = "dragable" />
+                <InputGroupAddon addonType = "append">
+                  <Button onClick = {this.handleClick(waypoint.id, deleteWaypoint)} >
+                    X
+                  </Button>
+                </InputGroupAddon>
+              </InputGroup>
+              <br />
+            </Fragment>
+        }
+      </Motion>
     );
   }
 
@@ -34,5 +40,12 @@ class Waypoint extends Component {
     deleteWaypoint(id);
   }
 }
+
+const transform = (scale, translateY, zIndex) => {
+  return {
+    transform: `translate3d(0, ${translateY}px, 0) scale(${scale})`,
+    zIndex
+  }
+};
 
 export default connect(null, { deleteWaypoint })(Waypoint);
