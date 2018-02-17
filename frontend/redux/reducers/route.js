@@ -1,4 +1,6 @@
-import { LOAD_ROUTE, ADD_WAYPOINT, DELETE_WAYPOINT, SORT_ROUTE } from 'constants';
+import {
+  LOAD_ROUTE, ADD_WAYPOINT, DELETE_WAYPOINT, SORT_ROUTE, UPDATE_WAYPOINT
+} from 'constants';
 import { OrderedMap, Record } from 'immutable';
 
 const WaypointRecord = Record({
@@ -26,6 +28,9 @@ export default (routeState = defaultState, action) => {
       return routeState.setIn(['entities', id], new WaypointRecord({
         id, name, coordinates
       }));
+      break;
+    case UPDATE_WAYPOINT:
+      return routeState.updateIn(['entities', payload.item.id], item => payload.item);
       break;
     case DELETE_WAYPOINT:
       return routeState.deleteIn(['entities', payload.id]);

@@ -3,6 +3,7 @@ export const ABOUT = 'FunBox';
 export const LOAD_ROUTE = 'LOAD_ROUTE';
 export const ADD_WAYPOINT = 'ADD_WAYPOINT';
 export const DELETE_WAYPOINT = 'DELETE_WAYPOINT';
+export const UPDATE_WAYPOINT = 'UPDATE_WAYPOINT';
 export const SORT_ROUTE = 'SORT_ROUTE';
 
 export const HOME_PAGE = 'Home';

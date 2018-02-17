@@ -1,4 +1,6 @@
-import { LOAD_ROUTE, ADD_WAYPOINT, DELETE_WAYPOINT, SORT_ROUTE } from 'constants';
+import {
+  LOAD_ROUTE, ADD_WAYPOINT, DELETE_WAYPOINT, SORT_ROUTE, UPDATE_WAYPOINT
+} from 'constants';
 
 export function loadRoute() {
   return {
@@ -27,6 +29,32 @@ export function deleteWaypoint(id) {
     payload: {
       id
     }
+  };
+}
+
+export function updateWaypoint(item) {
+  return {
+    type: UPDATE_WAYPOINT,
+    payload: {
+      item
+    }
+  };
+}
+
+export function getReverseGeocoder(item, coordinates) {
+  return dispatch => {
+    ymaps.geocode(coordinates)
+      .then(res => {
+        dispatch(updateWaypoint({
+          id: item.id,
+          name: res.geoObjects.get(0).getAddressLine(),
+          coordinates
+        }));
+      })
+      .catch(error => {
+        dispatch(deleteWaypoint(item.id));
+        dispatch(addWaypoint(item.name, item.coordinates));
+      });
   };
 }
 

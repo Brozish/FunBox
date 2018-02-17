@@ -3,11 +3,11 @@ import { Card } from 'reactstrap';
 import { YMaps, Map as YMap, Placemark, Polyline, SearchControl, ZoomControl } from 'react-yandex-maps';
 import { connect } from 'react-redux';
 
-import { addWaypoint } from 'Redux/ac/route';
+import { addWaypoint, getReverseGeocoder } from 'Redux/ac/route';
 
 class MapRoute extends Component {
   render() {
-    const { addWaypoint, waypoints } = this.props;
+    const { addWaypoint, waypoints, getReverseGeocoder } = this.props;
 
     return (
       <Card>
@@ -20,7 +20,7 @@ class MapRoute extends Component {
               options = {searchControlOptions}
             />
             {this.getPolyline(waypoints)}
-            {this.getPlaceMarks(waypoints)}
+            {this.getPlaceMarks(waypoints, getReverseGeocoder)}
           </YMap>
         </YMaps>
       </Card>
@@ -40,7 +40,7 @@ class MapRoute extends Component {
     />
   }
 
-  getPlaceMarks(waypoints) {
+  getPlaceMarks(waypoints, getReverseGeocoder) {
     return waypoints.map( item => {
       const geometry = { coordinates: item.coordinates };
       const properties = { balloonContent: item.name };
@@ -49,12 +49,18 @@ class MapRoute extends Component {
         geometry = {geometry}
         properties = {properties}
         options = {defaultPlacemarkOptions}
+        onDragEnd = {this.handleDrag(item, getReverseGeocoder)}
+        instanceRef = {this.setPlaceMarkRef(item.id)}
       />
     });
   }
 
   setSearchControlRef = ref => {
     this.searchControl = ref;
+  }
+
+  setPlaceMarkRef = id => ref => {
+    this[`placeMarkRef${id}`] = ref;
   }
 
   handleChange = addWaypoint => event => {
@@ -66,13 +72,17 @@ class MapRoute extends Component {
         res.geometry.getCoordinates()
       );
     });
-  };
+  }
+
+  handleDrag = (item, getReverseGeocoder) => event => {
+    getReverseGeocoder(item, this[`placeMarkRef${item.id}`].geometry.getCoordinates());
+  }
 }
 
 const defaultPlacemarkOptions = {
   preset: 'islands#icon',
   iconColor: 'rgb(0, 149, 182)',
-  draggable: false
+  draggable: true
 };
 
 const defaultPolylineOptions = {
@@ -89,4 +99,4 @@ export default connect(state => {
   return {
     waypoints: state.route.entities.toArray()
   };
-}, { addWaypoint })(MapRoute);
+}, { addWaypoint, getReverseGeocoder })(MapRoute);
